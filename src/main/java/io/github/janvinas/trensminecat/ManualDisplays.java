@@ -585,21 +585,17 @@ public class ManualDisplays {
     }
 
     public static class ManualDisplay6 extends ManualDisplay{
-        int animationLength = 1;
-        String trainDataDest;
-        String trainDataName;
-        boolean PMR = false;
         boolean hasTrain = false;
         String brand;
 
-        static final Font helvetica = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 14);
+        static final Font helvetica = new Font("Helvetica", Font.BOLD, 14);
 
         @Override
         public void onAttached() {
-            getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
+            getLayer(1).draw(loadTexture(imgDir + "ManualDisplay6.png"), 0, 0);
             brand = properties.get("brand", String.class, "rodalies"); //si no s'ha especificat una marca, retorna rodalies.
-            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-            setUpdateWithoutViewers(false);
+            getLayer(3).draw(loadTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+
             super.onAttached();
         }
 
@@ -613,148 +609,21 @@ public class ManualDisplays {
             super.onTick();
 
             if(!hasTrain){
-                animationLength = 1;
-                getLayer(3).clear();
-                getLayer(5).clear();
+                getLayer(2).clear();
                 LocalDateTime now = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                BufferedImage time = new BufferedImage(255,128, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage time = new BufferedImage(40,20, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = time.createGraphics();
                 g.setFont(helvetica);
                 g.setColor(new Color(255, 255, 255));
-                g.drawString(formatter.format(now), 200, 70);
+                g.drawString(formatter.format(now), 0, 0);
                 g.dispose();
-                getLayer(3).draw(MapTexture.fromImage(time), 0, 0);
-            }
-
-            else {
-                if (PMR) { getLayer(5).draw(Assets.getMapTexture(imgDir + "PMR20px.png"), 222, 66); }
-                try {
-                    if (trainDataName.toLowerCase().contains("r1_serveia") && trainDataDest.equalsIgnoreCase("Hospitalet de Llobregat") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R1/A/HospitaletDeLlobregat/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r1_serveia") && trainDataDest.equalsIgnoreCase("Maçanet Massanes") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R1/A/MaçanetMassanes/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r1_serveib") && trainDataDest.equalsIgnoreCase("Molins de Rei") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R1/B/MolinsDeRei/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r1_serveib") && trainDataDest.equalsIgnoreCase("Arenys de Mar") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R1/B/ArenysDeMar/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r2s_serveia") && trainDataDest.equalsIgnoreCase("Barcelona - Estació de França") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R2/A/Barcelona-EstacióDeFrança/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r2s_serveia") && trainDataDest.equalsIgnoreCase("Sant Vicenç de Calders") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R2/A/SantVicençDeCalders/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r2s_serveib") && trainDataDest.equalsIgnoreCase("Barcelona - Estació de França") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R2/B/Barcelona-EstacióDeFrança/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r2s_serveib") && trainDataDest.equalsIgnoreCase("Vilanova i la Geltrú") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R2/B/VilanovaILaGeltrú/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r8") && trainDataDest.equalsIgnoreCase("Martorell") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R8/Martorell/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r8") && trainDataDest.equalsIgnoreCase("Granollers Centre") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R8/GranollersCentre/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r10") && trainDataDest.equalsIgnoreCase("Aeroport del Prat") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R10/AeroportDelPrat/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                    if (trainDataName.toLowerCase().contains("r10") && trainDataDest.equalsIgnoreCase("Barcelona - Estació de França") && animationLength > 0 && animationLength < 602) {
-                        if (animationLength != 601) {
-                            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px_animated/Rodalies/R10/Barcelona-EstacióDeFrança/fotograma" + animationLength + ".png"), 13, 41);
-                            animationLength++;
-                        }
-                        else {
-                            animationLength = 0;
-                        }
-                    }
-                } catch (MapTexture.TextureLoadException e){
-                    Bukkit.getServer().getConsoleSender().sendMessage("Oops! Errada al carregar animació pel tren [\" + trainDataName + \" amb destinació \" + trainDataDest + \"] (pot ser d'un tren que no tingui cap animació codificada?");
-                }
+                getLayer(2).draw(MapTexture.fromImage(time), 180, 70);
             }
         }
 
         @Override
-        public boolean updateInformation(String displayID, String via, MinecartGroup dadesTren, Integer clearIn) {
-            if (via != null) {
-                displayID = displayID + via;
-            }
-
-            if (dadesTren.getProperties().matchTag("-PMR-")){
-                PMR = true;
-            }
-
-            String codiParada = displayID.replaceAll("[0-9]","");
+        public boolean updateInformation(String displayID, String name, String displayName, String destination, int clearIn) {
             if(! properties.get("ID", String.class).equals(displayID)) return false;
 
             hasTrain = true;
@@ -765,21 +634,12 @@ public class ManualDisplays {
 
             String trainLine;
             String dest;
-            if (!dadesTren.getProperties().matchTag(codiParada)){
+            if(destination.equals("nopara")){
                 trainLine = "info";
-                dest = "Sense parada / Sin parada";
-            }
-            else {
-                trainLine = BoardUtils.getTrainLine(dadesTren.getProperties().getTrainName());
-                dest = dadesTren.getProperties().getDestination();
-            }
-
-            MapTexture lineIcon;
-            try {
-                lineIcon = Assets.getMapTexture(imgDir + "46px/" + trainLine + ".png");
-            } catch (MapTexture.TextureLoadException e) {
-                lineIcon = Assets.getMapTexture(imgDir + "46px/info.png");
-                dest = dadesTren.getProperties().getDestination();
+                dest = "Sense parada";
+            }else{
+                trainLine = BoardUtils.getTrainLine(name);
+                dest = destination;
             }
 
             BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
@@ -788,15 +648,22 @@ public class ManualDisplays {
             g.setColor(new Color(255, 255, 255));
             g.drawString(dest.toUpperCase(), 65, 70);
 
+            MapTexture lineIcon;
+            try{
+                lineIcon = loadTexture(imgDir + "46px/" + trainLine + ".png");
+            }catch(MapTexture.TextureLoadException e){
+                lineIcon = loadTexture(imgDir + "46px/what.png");
+                dest = displayName;
+            }
+
             g.dispose();
-            getLayer(2).draw(MapTexture.fromImage(text),0 , 0);
-            getLayer(2).draw(lineIcon, 13, 41);
-            trainDataDest = dadesTren.getProperties().getDestination();
-            trainDataName = dadesTren.getProperties().getTrainName();
+            getLayer(3).draw(MapTexture.fromImage(text),0 , 0);
+            getLayer(3).draw(lineIcon, 13, 41);
 
             if(clearIn != 0){
-                getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () ->
-                        this.clearInformation(properties.get("ID", String.class)), clearIn * 20L);
+                getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
+                    this.clearInformation(properties.get("ID", String.class));
+                }, clearIn * 20L);
             }
 
             return true;
@@ -807,10 +674,9 @@ public class ManualDisplays {
             if(! properties.get("ID", String.class).equals(displayID)) return false;
 
             hasTrain = false;
-            PMR = false;
-            getLayer(2).clear();
-            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-            getLayer(5).clear();
+            getLayer(3).clear();
+            getLayer(3).draw(loadTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+
             return true;
         }
     }
