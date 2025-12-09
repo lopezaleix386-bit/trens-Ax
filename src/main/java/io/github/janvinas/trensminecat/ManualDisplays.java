@@ -584,25 +584,39 @@ public class ManualDisplays {
 
     }
 
-    public static class ManualDisplay6 extends ManualDisplay{
-    String trainDataDest;
-    String trainDataName;
+    public static class ManualDisplay6 extends ManualDisplay {
     boolean hasTrain = false;
     String brand;
 
     static final Font helvetica = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 14);
+    static final String imgDir = "img/"; // Carpeta correcta de imágenes
 
     @Override
     public void onAttached() {
-        getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
+        System.out.println("[ManualDisplay6] onAttached llamado");
+        try {
+            getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
+            System.out.println("[ManualDisplay6] Cargado ManualDisplay6.png");
+        } catch (Exception e) {
+            System.out.println("[ManualDisplay6] ERROR cargando ManualDisplay6.png: " + e.getMessage());
+        }
+
         brand = properties.get("brand", String.class, "rodalies");
-        getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+        System.out.println("[ManualDisplay6] Brand: " + brand);
+        try {
+            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+            System.out.println("[ManualDisplay6] Cargada imagen de la brand: " + brand);
+        } catch (Exception e) {
+            System.out.println("[ManualDisplay6] ERROR cargando imagen de la brand: " + e.getMessage());
+        }
+
         setUpdateWithoutViewers(false);
         super.onAttached();
     }
 
     @Override
     public void onDetached() {
+        System.out.println("[ManualDisplay6] onDetached llamado");
         super.onDetached();
     }
 
@@ -610,65 +624,84 @@ public class ManualDisplays {
     public void onTick() {
         super.onTick();
 
-        if(!hasTrain){
+        if (!hasTrain) {
+            System.out.println("[ManualDisplay6] No hay tren, mostrando hora");
             getLayer(2).clear();
+
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            BufferedImage time = new BufferedImage(255,128, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage time = new BufferedImage(255, 128, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = time.createGraphics();
             g.setFont(helvetica);
-            g.setColor(new Color(255, 255, 255));
+            g.setColor(Color.WHITE);
             g.drawString(formatter.format(now), 200, 70);
             g.dispose();
+
             getLayer(2).draw(MapTexture.fromImage(time), 0, 0);
+            System.out.println("[ManualDisplay6] Hora mostrada: " + formatter.format(now));
         }
     }
 
     @Override
     public boolean updateInformation(String displayID, String via, MinecartGroup dadesTren, Integer clearIn) {
-        if(! properties.get("ID", String.class).equals(displayID)) return false;
+        System.out.println("[ManualDisplay6] updateInformation llamado con displayID: " + displayID);
+
+        if (!properties.get("ID", String.class).equals(displayID)) {
+            System.out.println("[ManualDisplay6] displayID no coincide, no se actualiza");
+            return false;
+        }
 
         hasTrain = true;
         brand = properties.get("brand", String.class, "rodalies");
+        System.out.println("[ManualDisplay6] Brand usada: " + brand);
 
         getLayer(2).clear();
         getLayer(3).clear();
 
-        trainDataName = dadesTren.getProperties().getTrainName();
-        trainDataDest = dadesTren.getProperties().getDestination();
-
         String trainLine;
         String dest;
 
-        // Mostrar "Sense parada" solo si el nombre del tren es "nopara"
-        if(trainDataName.equalsIgnoreCase("nopara")){
+        if (dadesTren.getProperties().getTrainName().equalsIgnoreCase("nopara")) {
+            System.out.println("[ManualDisplay6] Tren no para, mostrando mensaje");
             trainLine = "info";
-            dest = "No para";
+            dest = "Sense parada / Sin parada";
         } else {
-            trainLine = BoardUtils.getTrainLine(trainDataName);
-            dest = trainDataDest;
+            trainLine = BoardUtils.getTrainLine(dadesTren.getProperties().getTrainName());
+            dest = dadesTren.getProperties().getDestination();
+            System.out.println("[ManualDisplay6] Tren detectado: " + dadesTren.getProperties().getTrainName() +
+                               " destino: " + dest + " línea: " + trainLine);
         }
 
         BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = text.createGraphics();
         g.setFont(helvetica);
-        g.setColor(new Color(255, 255, 255));
+        g.setColor(Color.WHITE);
         g.drawString(dest.toUpperCase(), 65, 70);
         g.dispose();
 
         MapTexture lineIcon;
         try {
             lineIcon = Assets.getMapTexture(imgDir + "46px/" + trainLine + ".png");
+            System.out.println("[ManualDisplay6] Icono de línea cargado: " + trainLine);
         } catch (MapTexture.TextureLoadException e) {
-            lineIcon = Assets.getMapTexture(imgDir + "46px/info.png");
+            System.out.println("[ManualDisplay6] ERROR cargando icono de línea: " + e.getMessage());
+            try {
+                lineIcon = Assets.getMapTexture(imgDir + "46px/info.png");
+                System.out.println("[ManualDisplay6] Cargado icono por defecto info.png");
+            } catch (MapTexture.TextureLoadException ex) {
+                System.out.println("[ManualDisplay6] ERROR cargando info.png: " + ex.getMessage());
+                return false;
+            }
         }
 
         getLayer(3).draw(MapTexture.fromImage(text), 0, 0);
         getLayer(3).draw(lineIcon, 13, 41);
 
-        if(clearIn != 0){
-            getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () ->
-                    this.clearInformation(properties.get("ID", String.class)), clearIn * 20L);
+        if (clearIn != 0) {
+            getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
+                System.out.println("[ManualDisplay6] Limpiando información después de " + clearIn + " segundos");
+                this.clearInformation(properties.get("ID", String.class));
+            }, clearIn * 20L);
         }
 
         return true;
@@ -676,15 +709,26 @@ public class ManualDisplays {
 
     @Override
     public boolean clearInformation(String displayID) {
-        if(! properties.get("ID", String.class).equals(displayID)) return false;
+        System.out.println("[ManualDisplay6] clearInformation llamado con displayID: " + displayID);
+
+        if (!properties.get("ID", String.class).equals(displayID)) {
+            System.out.println("[ManualDisplay6] displayID no coincide, no se limpia");
+            return false;
+        }
 
         hasTrain = false;
-        getLayer(2).clear();
-        getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+        getLayer(3).clear();
+        try {
+            getLayer(3).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+            System.out.println("[ManualDisplay6] Imagen de brand recargada: " + brand);
+        } catch (MapTexture.TextureLoadException e) {
+            System.out.println("[ManualDisplay6] ERROR recargando imagen de brand: " + e.getMessage());
+        }
 
         return true;
     }
 }
+
 
     public static class ManualDisplay7 extends ManualDisplay{
         static final Font helvetica19 = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 19);
