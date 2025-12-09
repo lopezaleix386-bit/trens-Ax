@@ -595,6 +595,7 @@ public class ManualDisplays {
     public void onAttached() {
         System.out.println("[ManualDisplay6] onAttached llamado");
         try {
+            getLayer(1).clear();
             getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
             System.out.println("[ManualDisplay6] Cargado ManualDisplay6.png");
         } catch (Exception e) {
@@ -604,6 +605,7 @@ public class ManualDisplays {
         brand = properties.get("brand", String.class, "rodalies");
         System.out.println("[ManualDisplay6] Brand: " + brand);
         try {
+            getLayer(2).clear();
             getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
             System.out.println("[ManualDisplay6] Cargada imagen de la brand: " + brand);
         } catch (Exception e) {
@@ -666,10 +668,9 @@ public class ManualDisplays {
             trainLine = "info";
             dest = "Sense parada / Sin parada";
         } else {
-            trainLine = BoardUtils.getTrainLine(dadesTren.getProperties().getTrainName());
+            trainLine = dadesTren.getProperties().getTrainName(); // <- aquí usamos el nombre directamente
             dest = dadesTren.getProperties().getDestination();
-            System.out.println("[ManualDisplay6] Tren detectado: " + dadesTren.getProperties().getTrainName() +
-                               " destino: " + dest + " línea: " + trainLine);
+            System.out.println("[ManualDisplay6] Tren detectado: " + trainLine + " destino: " + dest);
         }
 
         BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
