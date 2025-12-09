@@ -584,8 +584,7 @@ public class ManualDisplays {
 
     }
 
-    public static class ManualDisplay6 extends ManualDisplay {
-
+    public static class ManualDisplay6 extends ManualDisplay{
     String trainDataDest;
     String trainDataName;
     boolean hasTrain = false;
@@ -596,43 +595,38 @@ public class ManualDisplays {
     @Override
     public void onAttached() {
         getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
-        brand = properties.get("brand", String.class, "rodalies"); 
+        brand = properties.get("brand", String.class, "rodalies");
         getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
         setUpdateWithoutViewers(false);
         super.onAttached();
     }
 
     @Override
+    public void onDetached() {
+        super.onDetached();
+    }
+
+    @Override
     public void onTick() {
         super.onTick();
 
-        if (!hasTrain) {
-            getLayer(3).clear();
-            getLayer(5).clear();
-
+        if(!hasTrain){
+            getLayer(2).clear();
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-            BufferedImage time = new BufferedImage(255, 128, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage time = new BufferedImage(255,128, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = time.createGraphics();
             g.setFont(helvetica);
-            g.setColor(Color.WHITE);
+            g.setColor(new Color(255, 255, 255));
             g.drawString(formatter.format(now), 200, 70);
             g.dispose();
-
-            getLayer(3).draw(MapTexture.fromImage(time), 0, 0);
+            getLayer(2).draw(MapTexture.fromImage(time), 0, 0);
         }
     }
 
     @Override
     public boolean updateInformation(String displayID, String via, MinecartGroup dadesTren, Integer clearIn) {
-
-        if (via != null) {
-            displayID = displayID + via;
-        }
-
-        String codiParada = displayID.replaceAll("[0-9]", "");
-        if (!properties.get("ID", String.class).equals(displayID)) return false;
+        if(! properties.get("ID", String.class).equals(displayID)) return false;
 
         hasTrain = true;
         brand = properties.get("brand", String.class, "rodalies");
@@ -640,45 +634,41 @@ public class ManualDisplays {
         getLayer(2).clear();
         getLayer(3).clear();
 
+        trainDataName = dadesTren.getProperties().getTrainName();
+        trainDataDest = dadesTren.getProperties().getDestination();
+
         String trainLine;
         String dest;
 
-        // NO PARA si no tiene el tag
-        if (!dadesTren.getProperties().matchTag(codiParada)) {
+        // Mostrar "Sense parada" solo si el nombre del tren es "nopara"
+        if(trainDataName.equalsIgnoreCase("nopara")){
             trainLine = "info";
-            dest = "Sense parada / Sin parada";
+            dest = "No para";
         } else {
-            trainLine = BoardUtils.getTrainLine(dadesTren.getProperties().getTrainName());
-            dest = dadesTren.getProperties().getDestination();
+            trainLine = BoardUtils.getTrainLine(trainDataName);
+            dest = trainDataDest;
         }
+
+        BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = text.createGraphics();
+        g.setFont(helvetica);
+        g.setColor(new Color(255, 255, 255));
+        g.drawString(dest.toUpperCase(), 65, 70);
+        g.dispose();
 
         MapTexture lineIcon;
         try {
             lineIcon = Assets.getMapTexture(imgDir + "46px/" + trainLine + ".png");
         } catch (MapTexture.TextureLoadException e) {
             lineIcon = Assets.getMapTexture(imgDir + "46px/info.png");
-            dest = dadesTren.getProperties().getDestination();
         }
 
-        BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = text.createGraphics();
-        g.setFont(helvetica);
-        g.setColor(Color.WHITE);
-        g.drawString(dest.toUpperCase(), 65, 70);
-        g.dispose();
+        getLayer(3).draw(MapTexture.fromImage(text), 0, 0);
+        getLayer(3).draw(lineIcon, 13, 41);
 
-        getLayer(2).draw(MapTexture.fromImage(text), 0, 0);
-        getLayer(2).draw(lineIcon, 13, 41);
-
-        trainDataDest = dadesTren.getProperties().getDestination();
-        trainDataName = dadesTren.getProperties().getTrainName();
-
-        if (clearIn != 0) {
-            getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(
-                    getPlugin(),
-                    () -> this.clearInformation(properties.get("ID", String.class)),
-                    clearIn * 20L
-            );
+        if(clearIn != 0){
+            getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () ->
+                    this.clearInformation(properties.get("ID", String.class)), clearIn * 20L);
         }
 
         return true;
@@ -686,17 +676,15 @@ public class ManualDisplays {
 
     @Override
     public boolean clearInformation(String displayID) {
-        if (!properties.get("ID", String.class).equals(displayID)) return false;
+        if(! properties.get("ID", String.class).equals(displayID)) return false;
 
         hasTrain = false;
-
         getLayer(2).clear();
         getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-        getLayer(5).clear();
+
         return true;
     }
 }
-
 
     public static class ManualDisplay7 extends ManualDisplay{
         static final Font helvetica19 = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 19);
