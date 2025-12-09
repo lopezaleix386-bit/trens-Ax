@@ -1,125 +1,139 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.janvinas</groupId>
-    <artifactId>trens-minecat</artifactId>
-    <version>1.5.11</version>
+  <groupId>io.github.janvinas</groupId>
+  <artifactId>trens-minecat</artifactId>
+  <version>1.5.11</version>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>MG-Dev Jenkins CI Maven Repository</id>
-            <url>https://ci.mg-dev.eu/plugin/repository/everything</url>
-        </repository>
-    </repositories>
+  <repositories>
+    <!-- Repositorio oficial de Spigot para API -->
+    <repository>
+      <id>spigot-public</id>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+    </repository>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.bergerkiller.bukkit</groupId>
-            <artifactId>TrainCarts</artifactId>
-            <version>1.17.1-v2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.bergerkiller.bukkit</groupId>
-            <artifactId>BKCommonLib</artifactId>
-            <version>1.17.1-v5-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.bergerkiller.bukkit</groupId>
-            <artifactId>SignLink</artifactId>
-            <version>1.17.1-v2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.intelie.omnicron</groupId>
-            <artifactId>omnicron</artifactId>
-            <version>0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.6.3</version>
-            <scope>compile</scope>
-        </dependency>
+    <!-- Repositorio oficial de BKCommonLib/TrainCarts/SignLink (MG‑Dev CI) -->
+    <repository>
+      <id>mg-dev</id>
+      <url>https://ci.mg-dev.eu/plugin/repository/everything</url>
+    </repository>
+  </repositories>
 
-    </dependencies>
+  <dependencies>
+    <!-- Spigot API — agregado como provided -->
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.17.1-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>config.yml</include>
-                    <include>plugin.yml</include>
-                    <include>stationList.yml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>14</source>
-                    <target>14</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>info.picocli</groupId>
-                            <artifactId>picocli-codegen</artifactId>
-                            <version>4.6.3</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <compilerArgs>
-                        <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- BKCommonLib — versión actual mantenida -->
+    <dependency>
+      <groupId>com.bergerkiller.bukkit</groupId>
+      <artifactId>BKCommonLib</artifactId>
+      <version>1.20.4-v1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- TrainCarts — si lo usas directamente en código (dependiendo de la versión compatible) -->
+    <dependency>
+      <groupId>com.bergerkiller.bukkit</groupId>
+      <artifactId>TrainCarts</artifactId>
+      <!-- Si no hay un release oficial “stable” para 1.17, puedes usar la snapshot más reciente compatible que haya en MG‑Dev -->
+      <version>1.17.1-v2-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- SignLink — si lo necesitas para letreros dinámicos -->
+    <dependency>
+      <groupId>com.bergerkiller.bukkit</groupId>
+      <artifactId>SignLink</artifactId>
+      <version>1.17.1-v2-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Otras dependencias de tu plugin -->
+    <dependency>
+      <groupId>net.intelie.omnicron</groupId>
+      <artifactId>omnicron</artifactId>
+      <version>0.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>4.6.3</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>config.yml</include>
+          <include>plugin.yml</include>
+          <include>stationList.yml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>info.picocli</groupId>
+              <artifactId>picocli-codegen</artifactId>
+              <version>4.6.3</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
