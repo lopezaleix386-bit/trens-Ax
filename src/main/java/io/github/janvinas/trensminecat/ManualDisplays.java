@@ -623,52 +623,53 @@ public class ManualDisplays {
         }
 
         @Override
-        public boolean updateInformation(String displayID, String name, String displayName, String destination, int clearIn) {
-            if(! properties.get("ID", String.class).equals(displayID)) return false;
+public boolean updateInformation(String displayID, String via, MinecartGroup dadesTren, Integer clearIn) {
+    if(! properties.get("ID", String.class).equals(displayID)) return false;
 
-            hasTrain = true;
-            brand = properties.get("brand", String.class, "rodalies"); //si no s'ha especificat una marca, retorna rodalies.
+    hasTrain = true;
+    brand = properties.get("brand", String.class, "rodalies");
 
-            getLayer(2).clear();
-            getLayer(3).clear();
+    getLayer(2).clear();
+    getLayer(3).clear();
 
-            String trainLine;
-            String dest;
-            if(destination.equals("nopara")){
-                trainLine = "info";
-                dest = "Sense parada";
-            }else{
-                trainLine = BoardUtils.getTrainLine(name);
-                dest = destination;
-            }
+    String trainLine;
+    String dest;
 
-            BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = text.createGraphics();
-            g.setFont(helvetica);
-            g.setColor(new Color(255, 255, 255));
-            g.drawString(dest.toUpperCase(), 65, 70);
+    // extraer info de dadesTren
+    if(via == null || via.equals("nopara")){
+        trainLine = "info";
+        dest = "Sense parada";
+    } else {
+        trainLine = BoardUtils.getTrainLine(dadesTren.getProperties().getTrainName());
+        dest = dadesTren.getProperties().getDestination();
+    }
 
-            MapTexture lineIcon;
-            try{
-                lineIcon = loadTexture(imgDir + "46px/" + trainLine + ".png");
-            }catch(MapTexture.TextureLoadException e){
-                lineIcon = loadTexture(imgDir + "46px/what.png");
-                dest = displayName;
-            }
+    BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g = text.createGraphics();
+    g.setFont(helvetica);
+    g.setColor(Color.WHITE);
+    g.drawString(dest.toUpperCase(), 65, 70);
+    g.dispose();
 
-            g.dispose();
-            getLayer(3).draw(MapTexture.fromImage(text),0 , 0);
-            getLayer(3).draw(lineIcon, 13, 41);
+    MapTexture lineIcon;
+    try {
+        lineIcon = loadTexture(imgDir + "46px/" + trainLine + ".png");
+    } catch (MapTexture.TextureLoadException e) {
+        lineIcon = loadTexture(imgDir + "46px/info.png");
+    }
 
-            if(clearIn != 0){
-                getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-                    this.clearInformation(properties.get("ID", String.class));
-                }, clearIn * 20L);
-            }
+    getLayer(3).draw(MapTexture.fromImage(text),0 , 0);
+    getLayer(3).draw(lineIcon, 13, 41);
 
-            return true;
-        }
+    if(clearIn != 0){
+        getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
+            this.clearInformation(properties.get("ID", String.class));
+        }, clearIn * 20L);
+    }
 
+    return true;
+}
+        
         @Override
         public boolean clearInformation(String displayID) {
             if(! properties.get("ID", String.class).equals(displayID)) return false;
