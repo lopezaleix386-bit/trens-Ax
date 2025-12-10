@@ -584,33 +584,25 @@ public class ManualDisplays {
 
     }
 
-    public static class ManualDisplay6 extends ManualDisplay {
+   public static class ManualDisplay6 extends ManualDisplay {
     boolean hasTrain = false;
     String brand;
 
     static final Font helvetica = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 14);
-    static final String imgDir = "img/"; // Carpeta correcta de imágenes
+    static final String imgDir = "img/";
 
     @Override
     public void onAttached() {
-        System.out.println("[ManualDisplay6] onAttached llamado");
         try {
             getLayer(1).clear();
             getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
-            System.out.println("[ManualDisplay6] Cargado ManualDisplay6.png");
-        } catch (Exception e) {
-            System.out.println("[ManualDisplay6] ERROR cargando ManualDisplay6.png: " + e.getMessage());
-        }
+        } catch (Exception e) {}
 
         brand = properties.get("brand", String.class, "rodalies");
-        System.out.println("[ManualDisplay6] Brand: " + brand);
         try {
             getLayer(2).clear();
             getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-            System.out.println("[ManualDisplay6] Cargada imagen de la brand: " + brand);
-        } catch (Exception e) {
-            System.out.println("[ManualDisplay6] ERROR cargando imagen de la brand: " + e.getMessage());
-        }
+        } catch (Exception e) {}
 
         setUpdateWithoutViewers(false);
         super.onAttached();
@@ -618,7 +610,6 @@ public class ManualDisplays {
 
     @Override
     public void onDetached() {
-        System.out.println("[ManualDisplay6] onDetached llamado");
         super.onDetached();
     }
 
@@ -627,7 +618,6 @@ public class ManualDisplays {
         super.onTick();
 
         if (!hasTrain) {
-            System.out.println("[ManualDisplay6] No hay tren, mostrando hora");
             getLayer(2).clear();
 
             LocalDateTime now = LocalDateTime.now();
@@ -640,22 +630,17 @@ public class ManualDisplays {
             g.dispose();
 
             getLayer(2).draw(MapTexture.fromImage(time), 0, 0);
-            System.out.println("[ManualDisplay6] Hora mostrada: " + formatter.format(now));
         }
     }
 
     @Override
     public boolean updateInformation(String displayID, String via, MinecartGroup dadesTren, Integer clearIn) {
-        System.out.println("[ManualDisplay6] updateInformation llamado con displayID: " + displayID);
-
         if (!properties.get("ID", String.class).equals(displayID)) {
-            System.out.println("[ManualDisplay6] displayID no coincide, no se actualiza");
             return false;
         }
 
         hasTrain = true;
         brand = properties.get("brand", String.class, "rodalies");
-        System.out.println("[ManualDisplay6] Brand usada: " + brand);
 
         getLayer(2).clear();
         getLayer(3).clear();
@@ -664,13 +649,11 @@ public class ManualDisplays {
         String dest;
 
         if (dadesTren.getProperties().getTrainName().equalsIgnoreCase("nopara")) {
-            System.out.println("[ManualDisplay6] Tren no para, mostrando mensaje");
             trainLine = "info";
-            dest = "Sense parada / Sin parada";
+            dest = "Sense parada";
         } else {
-            trainLine = dadesTren.getProperties().getTrainName(); // <- aquí usamos el nombre directamente
+            trainLine = dadesTren.getProperties().getTrainName();
             dest = dadesTren.getProperties().getDestination();
-            System.out.println("[ManualDisplay6] Tren detectado: " + trainLine + " destino: " + dest);
         }
 
         BufferedImage text = new BufferedImage(256, 128, BufferedImage.TYPE_INT_ARGB);
@@ -683,14 +666,10 @@ public class ManualDisplays {
         MapTexture lineIcon;
         try {
             lineIcon = Assets.getMapTexture(imgDir + "46px/" + trainLine + ".png");
-            System.out.println("[ManualDisplay6] Icono de línea cargado: " + trainLine);
         } catch (MapTexture.TextureLoadException e) {
-            System.out.println("[ManualDisplay6] ERROR cargando icono de línea: " + e.getMessage());
             try {
                 lineIcon = Assets.getMapTexture(imgDir + "46px/info.png");
-                System.out.println("[ManualDisplay6] Cargado icono por defecto info.png");
             } catch (MapTexture.TextureLoadException ex) {
-                System.out.println("[ManualDisplay6] ERROR cargando info.png: " + ex.getMessage());
                 return false;
             }
         }
@@ -700,7 +679,6 @@ public class ManualDisplays {
 
         if (clearIn != 0) {
             getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-                System.out.println("[ManualDisplay6] Limpiando información después de " + clearIn + " segundos");
                 this.clearInformation(properties.get("ID", String.class));
             }, clearIn * 20L);
         }
@@ -710,10 +688,7 @@ public class ManualDisplays {
 
     @Override
     public boolean clearInformation(String displayID) {
-        System.out.println("[ManualDisplay6] clearInformation llamado con displayID: " + displayID);
-
         if (!properties.get("ID", String.class).equals(displayID)) {
-            System.out.println("[ManualDisplay6] displayID no coincide, no se limpia");
             return false;
         }
 
@@ -721,15 +696,11 @@ public class ManualDisplays {
         getLayer(3).clear();
         try {
             getLayer(3).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-            System.out.println("[ManualDisplay6] Imagen de brand recargada: " + brand);
-        } catch (MapTexture.TextureLoadException e) {
-            System.out.println("[ManualDisplay6] ERROR recargando imagen de brand: " + e.getMessage());
-        }
+        } catch (MapTexture.TextureLoadException e) {}
 
         return true;
     }
 }
-
 
     public static class ManualDisplay7 extends ManualDisplay{
         static final Font helvetica19 = TrensMinecat.helvetica46JavaFont.deriveFont(Font.BOLD, 19);
