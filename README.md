@@ -56,6 +56,7 @@ Si passa un tren sense parada, es pot utilitzar el següent cartell:
 noparadisplay
 <nom de la pantalla>
 ```
+Per els cartells tipo 6 es te que tenir el nom "nopara".
 
 #### Models disponibles:
 
