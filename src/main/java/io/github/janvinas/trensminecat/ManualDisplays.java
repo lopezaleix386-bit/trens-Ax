@@ -611,8 +611,7 @@ public class ManualDisplays {
         super.onTick();
 
         if (!hasTrain) {
-            getLayer(2).clear();
-            getLayer(5).clear();
+            getLayer(3).clear();
 
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
