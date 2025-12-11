@@ -612,6 +612,7 @@ public class ManualDisplays {
 
         if (!hasTrain) {
             getLayer(2).clear();
+            getLayer(5).clear();
 
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -622,7 +623,7 @@ public class ManualDisplays {
             g.drawString(formatter.format(now), 200, 70);
             g.dispose();
 
-            getLayer(2).draw(MapTexture.fromImage(time), 0, 0);
+            getLayer(3).draw(MapTexture.fromImage(time), 0, 0);
         }
     }
 
@@ -667,8 +668,8 @@ public class ManualDisplays {
             }
         }
 
-        getLayer(3).draw(MapTexture.fromImage(text), 0, 0);
-        getLayer(3).draw(lineIcon, 13, 41);
+        getLayer(2).draw(MapTexture.fromImage(text), 0, 0);
+        getLayer(2).draw(lineIcon, 13, 41);
 
         if (clearIn != 0) {
             getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
@@ -686,9 +687,9 @@ public class ManualDisplays {
         }
 
         hasTrain = false;
-        getLayer(3).clear();
+        getLayer(2).clear();
         try {
-            getLayer(3).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
+            getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
         } catch (MapTexture.TextureLoadException e) {}
 
         return true;
