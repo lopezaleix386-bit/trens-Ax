@@ -592,21 +592,14 @@ public class ManualDisplays {
     static final String imgDir = "img/";
 
     @Override
-    public void onAttached() {
-        try {
-            getLayer(1).clear();
+        public void onAttached() {
             getLayer(1).draw(Assets.getMapTexture(imgDir + "ManualDisplay6.png"), 0, 0);
-        } catch (Exception e) {}
-
-        brand = properties.get("brand", String.class, "rodalies");
-        try {
-            getLayer(2).clear();
+            brand = properties.get("brand", String.class, "rodalies"); //si no s'ha especificat una marca, retorna rodalies.
             getLayer(2).draw(Assets.getMapTexture(imgDir + "46px/" + brand + ".png"), 13, 41);
-        } catch (Exception e) {}
+            setUpdateWithoutViewers(false);
+            super.onAttached();
+        }
 
-        setUpdateWithoutViewers(false);
-        super.onAttached();
-    }
 
     @Override
     public void onDetached() {
