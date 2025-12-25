@@ -641,11 +641,11 @@ public class ManualDisplays {
         String trainLine;
         String dest;
 
-        if (dadesTren.getProperties().getTrainName().equalsIgnoreCase("nopara")) {
+        if (dadesTren.getProperties().getDisplayName().equalsIgnoreCase("nopara")) {
             trainLine = "info";
             dest = "Sense parada";
         } else {
-            trainLine = dadesTren.getProperties().getTrainName();
+            trainLine = dadesTren.getProperties().getDisplayName();
             dest = dadesTren.getProperties().getDestination();
         }
 
